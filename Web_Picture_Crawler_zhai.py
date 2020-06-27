@@ -43,13 +43,13 @@ for i in pages:
     respnew=requests.get(basehttp+re.sub('href="','',str(i)),headers=headers1)
     respnew.encoding='gb2312'
     htmlnew=respnew.text
-    figs=re.findall('src="http.*?-\d+\.jpg',str(htmlnew))
+    figs=re.findall('<p><img src="http.*?-\d+\.jpg',str(htmlnew))
     
     for j in range(1,int(pagenum)):
         respnew1=requests.get(basehttp+re.sub('.html','',re.sub('href="','',str(i)))+'_'+str(j+1)+'.html',headers=headers1)
         respnew1.encoding='gb2312'
         htmlnew1=respnew1.text
-        figsnew=re.findall('src="http.*?-\d+\.jpg',str(htmlnew1))
+        figsnew=re.findall('<p><img src="http.*?-\d+\.jpg',str(htmlnew1))
 #        figs.append(figsnew)  append会把整体从尾部嵌入list中，展开嵌入需要使用extend（）
         figs.extend(figsnew)
 
@@ -61,17 +61,19 @@ for i in pages:
         time.sleep(0.1)
         m=m+1
         try:#地址有误时抛出异常
-            url=re.sub('src="','',url,)
+            url=re.sub('<p><img src="','',url,)
         except Exception as err:
-            print(url)
+            print(url+'网址异常')
         
         file_name = url.split('.')[-1]#提取照片格式
-        responsegraph =  requests.get(url,headers=headers1)
+        responsegraph =  requests.get(url,headers=headers1,timeout=600)
+        responsegraph.raise_for_status()
         with open(dir_name+'/'+'第'+str(m)+'张照片.'+file_name,'wb') as f:
             f.write(responsegraph.content)
             f.close()
             print('第'+str(m)+'张图片已下载')
 
+print('下载结束，总共下载'+str(m)+'张图片')
 
 
 
