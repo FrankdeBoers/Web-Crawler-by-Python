@@ -10,4 +10,6 @@ start_index = 17375 #设置起始页面ID
 iteratormax=10
 
 设置下载文件夹：
-dir_name = 'E:/Desktop/python web/download/'
+dir_name = 'E:/Desktop...'
+
+最新脚本基于xpath（替代正则表达式）与多线程threading进行网页爬取
